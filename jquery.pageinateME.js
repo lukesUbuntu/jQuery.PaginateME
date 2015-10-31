@@ -13,28 +13,42 @@ $.fn.paginateMe  = function(options) {
     //count page numbers
     var countPagination = elm.length;
     var pageCount = Math.ceil(countPagination / settings.pagemin);
+    var pageNumberArea = $(defaults.pagenumbering);
     console.log("pageCount",pageCount);
 
 
     //append btns
-    $(defaults.pagenumbering).append(
-        '<span id="previous" data-index="0" class="btn btn-default  disabled">Previous</span> <span id="next" data-index="0" class="btn btn-default">Next</span>'
+    pageNumberArea.append(
+        '<span id="previous" class="btn btn-default  disabled">Previous</span> <span id="next" class="btn btn-default">Next</span>'
     );
+    //set default index
+    pageNumberArea.data('index',0);
 
     //bind to the next button
-    $('#next',defaults.pagenumbering).click(function(){
-        var showFrom = $(this).data('index') + settings.pagemin;
+    $('#next',pageNumberArea).click(function(){
+        var showFrom =  pageNumberArea.data('index') + settings.pagemin;
         showElements(showFrom);
-
-        if (showFrom <= defaults.pagenumbering)
-            $(this).data('index',showFrom);
-        else
-            $(this).addClass('disabled');
+        isDisabled(showFrom);
         //console.log("active",)
         //will be showing 4 so lets hide 4 actives and show next 4 actives
     });
+    //bind to the next button
+    $('#previous',defaults.pagenumbering).click(function(){
+        var showFrom = $(this).data('index') - settings.pagemin;
+        showElements(showFrom);
+        isDisabled(showFrom);
+    });
 
-
+    function isDisabled(showFrom){
+        //only process till we have reached max
+        if (showFrom <= defaults.pagenumbering){
+            pageNumberArea.data('index',showFrom);
+            if ($(this).hasClass('disabled'))
+                $(this).removeClass('disabled');
+        }
+        else
+            $(this).addClass('disabled');
+    }
     function showElements(showFrom){
         //loop all elements that should be showing
         var max = showFrom + defaults.pagemin;
