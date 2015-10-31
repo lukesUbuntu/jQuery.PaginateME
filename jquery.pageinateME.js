@@ -11,8 +11,7 @@ $.fn.paginateMe  = function(options) {
         'pageNextBTN' : '<span class="btn btn-default next">Next</span>',
         'pagePreviousBTN' : '<span class="btn btn-default disabled previous">Previous</span>',
         'pageNextBTNElement' : '.next',
-        'pagePreviousBTNElement' : '.previous',
-        'elementAction' : 'hide'
+        'pagePreviousBTNElement' : '.previous'
     };
 
     var settings = $.extend( {}, defaults, options );
@@ -52,15 +51,15 @@ $.fn.paginateMe  = function(options) {
         },
         next: function(){
             pageNumberArea.data('index', pageNumberArea.data('index') + defaults.pageMin);  //need to clean this up
-            var p = this.get();
-            this.set(++p);
-            this.render();
+            var p = page.get();
+            page.set(++p);
+            page.render();
         },
         prev : function(){
             pageNumberArea.data('index', pageNumberArea.data('index') - defaults.pageMin); //need to clean this up
-            var p = this.get();
-            this.set(--p);
-            this.render();
+            var p = page.get();
+            page.set(--p);
+            page.render();
 
         },
         render: function(){
@@ -81,7 +80,7 @@ $.fn.paginateMe  = function(options) {
                 }
 
             });
-            this.isDisabled();
+            page.isDisabled();
         },
         isDisabled : function(){
             if (prevBtn.hasClass('disabled'))
@@ -96,7 +95,6 @@ $.fn.paginateMe  = function(options) {
                 nextBtn.removeClass('disabled');
 
             if (page.get() == pageCount){
-                console.log("adding disabled")
                 nextBtn.addClass('disabled');
             }
         }
