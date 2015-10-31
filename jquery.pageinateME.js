@@ -11,7 +11,8 @@ $.fn.paginateMe  = function(options) {
         'pageNextBTN' : '<span class="btn btn-default next">Next</span>',
         'pagePreviousBTN' : '<span class="btn btn-default disabled previous">Previous</span>',
         'pageNextBTNElement' : '.next',
-        'pagePreviousBTNElement' : '.previous'
+        'pagePreviousBTNElement' : '.previous',
+        'elementAction' : 'hide'
     };
 
     var settings = $.extend( {}, defaults, options );
@@ -20,7 +21,12 @@ $.fn.paginateMe  = function(options) {
     var countPagination = elm.length;
     var pageCount = Math.ceil(countPagination / settings.pageMin);
     var pageNumberArea = $(settings.pageNumbering);
-    console.log("pageCount",pageCount);
+
+    if (countPagination < settings.pageMin){
+        console.log("paginateMe, not applying not enough results",countPagination);
+        return false;
+    }
+
 
 
     //append btns
@@ -48,33 +54,36 @@ $.fn.paginateMe  = function(options) {
             pageNumberArea.data('index', pageNumberArea.data('index') + defaults.pageMin);  //need to clean this up
             var p = this.get();
             this.set(++p);
+            this.render();
         },
         prev : function(){
             pageNumberArea.data('index', pageNumberArea.data('index') - defaults.pageMin); //need to clean this up
             var p = this.get();
             this.set(--p);
-        }
-    };
+            this.render();
 
-    //bind to the next button
-    nextBtn.click(function(){
+        },
+        render: function(){
+            var showFrom =  pageNumberArea.data('index'); //+ settings.pagemin;
 
-        page.next();
-        showElements();
-        isDisabled();
-        //console.log("active",)
-        //will be showing 4 so lets hide 4 actives and show next 4 actives
-    });
-    //bind to the next button
-    prevBtn.click(function(){
-        page.prev();
-        showElements();
-        isDisabled();
-    });
+            //loop all elements that should be showing
+            var max = showFrom + settings.pageMin;
 
+            $.each(elm,function(index,element){
 
-    function isDisabled(){
+                if (index >= showFrom && index < max){
+                    if ($(this).hasClass('hide'))$(this).removeClass('hide');
+                    $(this).addClass('active');
+                }
+                else{
+                    if ($(this).hasClass('active'))$(this).removeClass('active');
+                    $(this).addClass('hide');
+                }
 
+            });
+            this.isDisabled();
+        },
+        isDisabled : function(){
             if (prevBtn.hasClass('disabled'))
                 prevBtn.removeClass('disabled');
 
@@ -90,30 +99,15 @@ $.fn.paginateMe  = function(options) {
                 console.log("adding disabled")
                 nextBtn.addClass('disabled');
             }
+        }
+    };
 
-    }
+    //bind to the next button
+    nextBtn.click(page.next);
+    //bind to the next button
+    prevBtn.click(page.prev);
 
-    function showElements(){
-        var showFrom =  pageNumberArea.data('index'); //+ settings.pagemin;
-
-        //loop all elements that should be showing
-        var max = showFrom + settings.pageMin;
-
-        $.each(elm,function(index,element){
-
-            if (index >= showFrom && index < max){
-                if ($(this).hasClass('hide'))$(this).removeClass('hide');
-                $(this).addClass('active');
-            }
-            else{
-                if ($(this).hasClass('active'))$(this).removeClass('active');
-                $(this).addClass('hide');
-            }
-
-        });
-    }
+    page.render();
 
 
-
-    showElements();
 };
