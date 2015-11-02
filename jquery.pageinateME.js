@@ -51,17 +51,20 @@ $.fn.paginateMe  = function(options) {
             pageNumberArea.data('pageCount',page);
         },
         next: function(){
+            if ($(this).hasClass('disabled')) return;
             pageNumberArea.data('index', pageNumberArea.data('index') + defaults.pageMin);  //need to clean this up
             var p = page.get();
             page.set(++p);
-            if ($(this).hasClass('disabled') == false)
+
             page.render();
         },
         prev : function(){
+            if ($(this).hasClass('disabled')) return;
             pageNumberArea.data('index', pageNumberArea.data('index') - defaults.pageMin); //need to clean this up
+
             var p = page.get();
             page.set(--p);
-            if ($(this).hasClass('disabled') == false)
+
             page.render();
 
         },
