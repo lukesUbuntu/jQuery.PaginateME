@@ -2,6 +2,7 @@
  * Created by Luke Hardiman on 1/11/2015.
  * PaginateME
  */
+(function($){
 $.fn.paginateMe  = function(options) {
     var elm = $(this);
     //pass our options
@@ -53,12 +54,14 @@ $.fn.paginateMe  = function(options) {
             pageNumberArea.data('index', pageNumberArea.data('index') + defaults.pageMin);  //need to clean this up
             var p = page.get();
             page.set(++p);
+            if ($(this).hasClass('disabled') == false)
             page.render();
         },
         prev : function(){
             pageNumberArea.data('index', pageNumberArea.data('index') - defaults.pageMin); //need to clean this up
             var p = page.get();
             page.set(--p);
+            if ($(this).hasClass('disabled') == false)
             page.render();
 
         },
@@ -109,3 +112,4 @@ $.fn.paginateMe  = function(options) {
 
 
 };
+})(jQuery);
